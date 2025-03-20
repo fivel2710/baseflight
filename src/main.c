@@ -112,15 +112,15 @@ int main(void)
         batteryInit();
     initBoardAlignment();
 
+    // production debug output
+//#ifdef PROD_DEBUG
+    productionDebug();
+//#endif
+
     // We have these sensors; SENSORS_SET defined in board.h depending on hardware platform
     sensorsSet(SENSORS_SET);
     // drop out any sensors that don't seem to work, init all the others. halt if gyro is dead.
     sensorsOK = sensorsAutodetect();
-
-    // production debug output
-#ifdef PROD_DEBUG
-    productionDebug();
-#endif
 
     // if gyro was not detected due to whatever reason, we give up now.
     if (!sensorsOK)
@@ -138,6 +138,11 @@ int main(void)
     }
     LED0_OFF;
     LED1_OFF;
+
+    while(true) {
+	LED0_TOGGLE;
+	delay(200);
+    }
 
     imuInit(); // Mag is initialized inside imuInit
     mixerInit(); // this will set core.useServo var depending on mixer type

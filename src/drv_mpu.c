@@ -4,6 +4,7 @@
  */
 
 #include "board.h"
+#include "mw.h"
 
 /* Generic driver for invensense gyro/acc devices.
  *
@@ -119,6 +120,9 @@ bool mpuDetect(sensor_t *acc, sensor_t *gyro, mpu_params_t *init)
     mpu_hardware_e hw = MPU_NONE;
     gpio_config_t gpio;
 
+	serialPrint(core.mainport, "mpuDetect Start/n");
+
+
     // Set acc_1G. Modified once by mpu6050CheckRevision for old (hopefully nonexistent outside of clones) parts
     acc_1G = 512 * 8;
 
@@ -151,14 +155,20 @@ bool mpuDetect(sensor_t *acc, sensor_t *gyro, mpu_params_t *init)
 
     sig &= 0x7E; // mask the lower/upper bits per MPUxxxx spec
 
+
+	serialPrint(core.mainport, "mpuDetect P1/n");
+
     if (sig == MPUx0x0_WHO_AM_I_CONST) {
+	serialPrint(core.mainport, "mpuDetect P2/n");
+
         hw = MPU_60x0;
         mpu6050CheckRevision();
-#ifdef PROD_DEBUG
+//#ifdef PROD_DEBUG
         mpu6050SelfTest();
-#endif
+//#endif
         mpu.init = mpu6050Init;
     } else if (sig == MPU6500_WHO_AM_I_CONST) {
+	serialPrint(core.mainport, "mpuDetect P3/n");
         if (useSpi)
             hw = MPU_65xx_SPI;
         else
@@ -166,9 +176,13 @@ bool mpuDetect(sensor_t *acc, sensor_t *gyro, mpu_params_t *init)
         mpu.init = mpu6500Init;
     }
 
+	serialPrint(core.mainport, "mpuDetect P4/n");
+
     // We're done. Nothing was found on any bus.
     if (hw == MPU_NONE)
         return false;
+
+	serialPrint(core.mainport, "mpuDetect P5/n");
 
     // 16.4 dps/lsb scalefactor for all Invensense devices
     gyro->scale = (4.0f / 16.4f) * (M_PI / 180.0f) * 0.000001f;

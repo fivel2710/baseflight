@@ -3,6 +3,7 @@
  * Licensed under GPL V3 or modified DCL - see https://github.com/multiwii/baseflight/blob/master/README.md
  */
 #include "board.h"
+#include "mw.h"
 
 #ifndef SOFT_I2C
 
@@ -10,8 +11,8 @@
 // SCL  PB10
 // SDA  PB11
 // I2C1
-// SCL  PB6
-// SDA  PB7
+// SCL  PB8
+// SDA  PB9
 
 static void i2c_er_handler(void);
 static void i2c_ev_handler(void);
@@ -28,7 +29,7 @@ typedef struct i2cDevice_t {
 } i2cDevice_t;
 
 static const i2cDevice_t i2cHardwareMap[] = {
-    { I2C1, GPIOB, Pin_6, Pin_7, I2C1_EV_IRQn, I2C1_ER_IRQn, RCC_APB1Periph_I2C1 },
+    { I2C1, GPIOB, Pin_8, Pin_9, I2C1_EV_IRQn, I2C1_ER_IRQn, RCC_APB1Periph_I2C1 },
     { I2C2, GPIOB, Pin_10, Pin_11, I2C2_EV_IRQn, I2C2_ER_IRQn, RCC_APB1Periph_I2C2 },
 };
 
@@ -137,8 +138,12 @@ bool i2cRead(uint8_t addr_, uint8_t reg_, uint8_t len, uint8_t *buf)
     busy = 1;
     error = false;
 
+	serialPrint(core.mainport, "i2cRead Start\n");
+
     if (!I2Cx)
         return false;
+
+	serialPrint(core.mainport, "i2cRead P1\n");
 
     if (!(I2Cx->CR2 & I2C_IT_EVT)) {                                    // if we are restarting the driver
         if (!(I2Cx->CR1 & 0x0100)) {                                    // ensure sending a start
@@ -164,6 +169,8 @@ bool i2cRead(uint8_t addr_, uint8_t reg_, uint8_t len, uint8_t *buf)
 
 static void i2c_er_handler(void)
 {
+	serialPrint(core.mainport, "i2c_er_handler\n");
+
     // Read the I2C1 status register
     volatile uint32_t SR1Register = I2Cx->SR1;
 
@@ -196,6 +203,8 @@ static void i2c_er_handler(void)
 
 void i2c_ev_handler(void)
 {
+	serialPrint(core.mainport, "i2c_ev_handler\n");
+
     static uint8_t subaddress_sent, final_stop;                         // flag to indicate if subaddess sent, flag to indicate final bus condition
     static int8_t index;                                                // index is signed -1 == send the subaddress
     uint8_t SReg_1 = I2Cx->SR1;                                         // read the status register here

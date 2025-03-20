@@ -38,6 +38,8 @@ bool sensorsAutodetect(void)
     drv_adxl345_config_t acc_params;
 #endif
 
+	serialPrint(core.mainport, "sensorsAutodetect Start");
+
     // mpu driver parameters
     mpu_config.lpf = mcfg.gyro_lpf;
     // Autodetect Invensense acc/gyro hardware

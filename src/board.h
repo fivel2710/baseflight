@@ -205,34 +205,35 @@ typedef struct baro_t {
 #if defined(NAZE)
 // Afroflight32
 
-#define LED0_GPIO   GPIOB
-#define LED0_PIN    Pin_3 // PB3 (LED)
+#define LED0_GPIO   GPIOC
+#define LED0_PIN    Pin_13 // PB13 (LED)
 #define LED1_GPIO   GPIOB
 #define LED1_PIN    Pin_4 // PB4 (LED)
 #define BEEP_GPIO   GPIOA
 #define BEEP_PIN    Pin_12 // PA12 (Buzzer)
-#define BARO_GPIO   GPIOC
-#define BARO_PIN    Pin_13
+#define BARO_GPIO   GPIOB
+#define BARO_PIN    Pin_3
 #define INV_PIN     Pin_2 // PB2 (BOOT1) abused as inverter select GPIO
 #define INV_GPIO    GPIOB
 
 #define GYRO
 #define ACC
-#define MAG
-#define BARO
+//#define MAG
+//#define BARO
 #define GPS
-#define LEDRING
-#define SONAR
+//#define LEDRING
+//#define SONAR
 #define BUZZER
 #define LED0
 #define LED1
 #define INVERTER
 #define MOTOR_PWM_RATE 400
 
-#define SENSORS_SET (SENSOR_ACC | SENSOR_BARO | SENSOR_MAG)
-#define I2C_DEVICE (I2CDEV_2)
+//#define SENSORS_SET (SENSOR_ACC | SENSOR_BARO | SENSOR_MAG)
+#define SENSORS_SET (SENSOR_ACC )
+#define I2C_DEVICE (I2CDEV_1)
 
-// #define PROD_DEBUG
+#define PROD_DEBUG
 // #define SOFT_I2C                 // enable to test software i2c
 // #define SOFT_I2C_PB1011          // If SOFT_I2C is enabled above, need to define pinout as well (I2C1 = PB67, I2C2 = PB1011)
 // #define SOFT_I2C_PB67
